@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loksewa MCQ Practice - Premium Prep Portal</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Background Glow Orbs -->
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+  <div class="glow-orb orb-3"></div>
+
+  <!-- Navigation Bar -->
+  <header class="app-header">
+    <div class="nav-container">
+      <div class="brand" id="brand-logo">
+        <div class="logo-icon">LS</div>
+        <div class="brand-text">
+          <h1>Loksewa MCQ</h1>
+          <span>Practice & Prep Portal</span>
+        </div>
+      </div>
+      
+      <div class="header-widgets">
+        <div class="streak-badge tooltipped" id="streak-widget" data-tooltip="Daily Login Streak">
+          <span class="icon">🔥</span>
+          <span class="count" id="streak-count">0</span>
+        </div>
+        <div class="xp-badge tooltipped" id="xp-widget" data-tooltip="Total XP Earned">
+          <span class="icon">✨</span>
+          <span class="count" id="xp-count">0 XP</span>
+        </div>
+        <button id="theme-toggle" class="header-btn" aria-label="Toggle Dark/Light Mode">
+          <span class="icon">🌙</span>
+        </button>
+        <button id="settings-btn" class="header-btn" aria-label="Open Settings">
+          <span class="icon">⚙️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Viewport Container -->
+  <main class="app-main">
+    
+    <!-- 1. HOME SCREEN -->
+    <section id="home-screen" class="view-screen active">
+      <!-- Gradient Hero Banner -->
+      <div class="hero-section">
+        <div class="hero-content">
+          <h2 class="hero-title">Prepare Smarter for Loksewa Exams</h2>
+          <p class="hero-subtitle" id="daily-quote">"Success isn't overnight. It's when every day you get a little better than the day before."</p>
+          <div class="hero-stats">
+            <div class="hero-stat-card">
+              <span class="stat-num" id="hero-total-q">1010+</span>
+              <span class="stat-lbl">Questions Loaded</span>
+            </div>
+            <div class="hero-stat-card">
+              <span class="stat-num" id="hero-accuracy">0%</span>
+              <span class="stat-lbl">Avg Accuracy</span>
+            </div>
+            <div class="hero-stat-card">
+              <span class="stat-num" id="hero-level">Level 1</span>
+              <span class="stat-lbl" id="hero-rank-name">Aspirant</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Progress Bar -->
+      <div class="dashboard-progress-card glass-panel">
+        <div class="progress-info">
+          <span>Level Progress: <strong id="progress-percent">0%</strong></span>
+          <span id="level-xp-progress">0 / 500 XP</span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="dashboard-progress-fill" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- Main Action Grid -->
+      <div class="action-grid">
+        <!-- Start Practice Mode -->
+        <div class="action-card glass-panel" id="card-practice">
+          <div class="card-icon practice-icon">🚀</div>
+          <h3>Practice Mode</h3>
+          <p>Practice questions with instant answer evaluation and in-depth explanations.</p>
+          <button class="btn btn-primary">Start Practice</button>
+        </div>
+
+        <!-- Mock Test Mode -->
+        <div class="action-card glass-panel" id="card-mock">
+          <div class="card-icon mock-icon">📝</div>
+          <h3>Mock Exams</h3>
+          <p>Simulate official Loksewa exams under timed constraints and strict conditions.</p>
+          <button class="btn btn-secondary">Configure Test</button>
+        </div>
+
+        <!-- Daily Challenge -->
+        <div class="action-card glass-panel highlight-card" id="card-daily">
+          <div class="card-icon daily-icon">📅</div>
+          <div class="badge-new">DAILY</div>
+          <h3>Daily Challenge</h3>
+          <p>Get a randomized set of 10 special questions to keep your streak alive & earn double XP.</p>
+          <button class="btn btn-accent">Play Today</button>
+        </div>
+
+        <!-- Custom filters -->
+        <div class="action-card glass-panel" id="card-category">
+          <div class="card-icon cat-icon">🎯</div>
+          <h3>Category Focused</h3>
+          <p>Narrow down your study to specific subjects like Geography, Math, IQ, etc.</p>
+          <button class="btn btn-outline">Choose Category</button>
+        </div>
+      </div>
+
+      <!-- Dashboard Statistics and Local Leaderboard -->
+      <div class="dashboard-bottom-grid">
+        <!-- Statistics Widget -->
+        <div class="stats-widget glass-panel">
+          <div class="widget-header">
+            <h3>📈 Performance Statistics</h3>
+            <button class="btn-text" id="view-all-stats-btn">Details</button>
+          </div>
+          <div class="stats-container">
+            <div class="stat-item">
+              <span class="label">Completed Questions</span>
+              <span class="value" id="stats-completed">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="label">Correct Answers</span>
+              <span class="value text-success" id="stats-correct">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="label">Wrong Answers</span>
+              <span class="value text-error" id="stats-wrong">0</span>
+            </div>
+            <div class="stat-item font-highlight">
+              <span class="label">Total XP Accumulation</span>
+              <span class="value text-accent" id="stats-xp">0 XP</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leaderboard / Achievements Widget -->
+        <div class="leaderboard-widget glass-panel">
+          <div class="widget-header">
+            <h3>🏆 Local Leaderboard</h3>
+            <button class="btn-text" id="reset-leaderboard-btn">Reset</button>
+          </div>
+          <div class="leaderboard-list" id="leaderboard-list-container">
+            <!-- Programmatically filled -->
+            <div class="leaderboard-item current-user">
+              <span class="rank">#1</span>
+              <span class="username">You (Aspirant)</span>
+              <span class="score">0 XP</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. PRACTICE SELECTION SCREEN -->
+    <section id="selection-screen" class="view-screen">
+      <div class="back-nav">
+        <button class="btn-back" id="back-to-home-selection">⬅ Back to Home</button>
+      </div>
+
+      <div class="screen-title">
+        <h2>Practice Configuration</h2>
+        <p>Customize your question filtering options to focus on your weak areas.</p>
+      </div>
+
+      <div class="config-grid">
+        <!-- Category Selection Card -->
+        <div class="config-card glass-panel">
+          <h3>Choose Category</h3>
+          <div class="category-options-grid" id="category-chips-container">
+            <!-- Programmatically injected -->
+          </div>
+        </div>
+
+        <!-- Difficulty Level Selection Card -->
+        <div class="config-card glass-panel">
+          <h3>Choose Difficulty</h3>
+          <div class="difficulty-options">
+            <div class="diff-option-btn active" data-difficulty="All">
+              <div class="diff-title">All Levels</div>
+              <div class="diff-desc">Mixed random pool (1000+ Qs)</div>
+            </div>
+            <div class="diff-option-btn" data-difficulty="Easy">
+              <div class="diff-title text-success">Easy (Level 1)</div>
+              <div class="diff-desc">Basic facts and core terminology (250 Qs)</div>
+            </div>
+            <div class="diff-option-btn" data-difficulty="Medium">
+              <div class="diff-title text-info">Medium (Level 2)</div>
+              <div class="diff-desc">Standard concepts and applications (250 Qs)</div>
+            </div>
+            <div class="diff-option-btn" data-difficulty="Hard">
+              <div class="diff-title text-warning">Hard (Level 3)</div>
+              <div class="diff-desc">Advanced analysis and historical details (250 Qs)</div>
+            </div>
+            <div class="diff-option-btn" data-difficulty="Expert">
+              <div class="diff-title text-error">Expert (Level 4)</div>
+              <div class="diff-desc">High-level IQ, logic, & complex rules (260 Qs)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="start-actions">
+        <button class="btn btn-primary btn-large" id="start-practice-action">Start Practice Session</button>
+      </div>
+    </section>
+
+    <!-- 3. MOCK TEST SETUP SCREEN -->
+    <section id="mock-setup-screen" class="view-screen">
+      <div class="back-nav">
+        <button class="btn-back" id="back-to-home-mock">⬅ Back to Home</button>
+      </div>
+
+      <div class="screen-title">
+        <h2>Mock Exam Configurator</h2>
+        <p>Set up an exam session matching your preferences. Answers are evaluated at the end.</p>
+      </div>
+
+      <div class="setup-form glass-panel">
+        <div class="form-row">
+          <label for="mock-question-count">Number of Questions</label>
+          <select id="mock-question-count" class="form-select">
+            <option value="20">20 Questions</option>
+            <option value="50" selected>50 Questions</option>
+            <option value="100">100 Questions</option>
+            <option value="200">200 Questions</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="mock-category">Target Category</label>
+          <select id="mock-category" class="form-select">
+            <option value="All">All Categories (Mixed)</option>
+            <!-- Injected programmatically -->
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="mock-difficulty">Target Difficulty</label>
+          <select id="mock-difficulty" class="form-select">
+            <option value="All">All Levels (Mixed)</option>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+            <option value="Expert">Expert</option>
+          </select>
+        </div>
+
+        <div class="form-row flex-row">
+          <div class="info-label">
+            <strong>Strict Timer Mode</strong>
+            <p>1 minute per question. Automatically submits when time is up.</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="mock-timer-toggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <button class="btn btn-primary btn-large" id="launch-mock-exam">Launch Mock Exam</button>
+      </div>
+    </section>
+
+    <!-- 4. QUIZ / PRACTICE SCREEN -->
+    <section id="quiz-screen" class="view-screen">
+      <div class="quiz-header">
+        <button class="btn-icon" id="quit-quiz-btn" aria-label="Quit Quiz">🚪 Exit</button>
+        <div class="quiz-badges">
+          <span class="badge" id="quiz-category-badge">Category</span>
+          <span class="badge" id="quiz-difficulty-badge">Difficulty</span>
+        </div>
+        <div class="quiz-timer" id="quiz-timer-container">
+          <span class="timer-icon">⏳</span>
+          <span class="timer-text" id="quiz-timer-text">00:00</span>
+        </div>
+      </div>
+
+      <div class="quiz-layout">
+        <!-- Main Quiz Workspace -->
+        <div class="quiz-workspace">
+          <!-- Progress bar on top -->
+          <div class="quiz-progress-section">
+            <div class="progress-details">
+              <span>Question <strong id="current-question-num">1</strong> of <strong id="total-questions-num">20</strong></span>
+              <span id="score-correct-badge" class="text-success hidden">Correct: 0</span>
+            </div>
+            <div class="quiz-progress-bar">
+              <div class="quiz-progress-fill" id="quiz-progress-fill" style="width: 5%;"></div>
+            </div>
+          </div>
+
+          <!-- Question Card -->
+          <div class="question-container glass-panel">
+            <p class="question-text" id="question-text-content">Question loading...</p>
+          </div>
+
+          <!-- Options Grid -->
+          <div class="options-container" id="options-grid">
+            <!-- Programmatically injected option cards -->
+          </div>
+
+          <!-- Explanation Box -->
+          <div class="explanation-card glass-panel hidden" id="explanation-container">
+            <div class="explanation-header">
+              <span class="icon">💡</span>
+              <h4>Detailed Explanation</h4>
+            </div>
+            <p id="explanation-text-content">Explanation goes here...</p>
+          </div>
+
+          <!-- Actions Toolbar -->
+          <div class="quiz-toolbar">
+            <div class="left-actions">
+              <button class="btn-tool" id="tool-prev" disabled>
+                <span class="icon">⬅</span> Prev
+              </button>
+              <button class="btn-tool" id="tool-bookmark" aria-label="Bookmark Question">
+                <span class="icon" id="bookmark-icon">🔖</span> Bookmark
+              </button>
+              <button class="btn-tool" id="tool-hint" aria-label="Request Hint">
+                <span class="icon">💡</span> Hint
+              </button>
+            </div>
+            
+            <div class="right-actions">
+              <button class="btn-tool" id="tool-skip">
+                Skip
+              </button>
+              <button class="btn btn-secondary" id="tool-submit" style="display: none;">
+                Submit Answer
+              </button>
+              <button class="btn btn-primary" id="tool-next">
+                Next <span class="icon">➡</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question Palette / Sidebar -->
+        <aside class="question-palette-panel glass-panel">
+          <h3>Question Map</h3>
+          <div class="palette-grid" id="palette-grid-container">
+            <!-- Programmatically generated grid of buttons -->
+          </div>
+          <div class="palette-legend">
+            <span class="legend-item"><span class="dot answered"></span>Answered</span>
+            <span class="legend-item"><span class="dot flagged"></span>Bookmarked</span>
+            <span class="legend-item"><span class="dot current"></span>Active</span>
+            <span class="legend-item"><span class="dot empty"></span>Unvisited</span>
+          </div>
+          <div class="palette-actions">
+            <button class="btn btn-outline btn-block" id="palette-submit-exam-btn">Submit Exam</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 5. RESULTS SCREEN -->
+    <section id="results-screen" class="view-screen">
+      <div class="results-header glass-panel">
+        <h2 id="result-greeting">Congratulations!</h2>
+        <p id="result-verdict">You have completed the mock test session.</p>
+        
+        <div class="results-score-circle">
+          <svg class="circular-progress" viewBox="0 0 100 100">
+            <circle class="bg-circle" cx="50" cy="50" r="40"></circle>
+            <circle class="fill-circle" id="result-circle-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: 251.2;"></circle>
+          </svg>
+          <div class="circle-content">
+            <span class="percent" id="result-score-percent">0%</span>
+            <span class="label" id="result-score-fraction">0 / 0</span>
+          </div>
+        </div>
+
+        <div class="stars-container" id="stars-rating-container">
+          <!-- 3 stars rendered here based on percentage -->
+        </div>
+      </div>
+
+      <!-- Result statistics grid -->
+      <div class="result-stats-grid">
+        <div class="result-stat-item glass-panel">
+          <span class="icon text-success">✔️</span>
+          <div class="stat-info">
+            <h4 id="res-stat-correct">0</h4>
+            <p>Correct Answers</p>
+          </div>
+        </div>
+        <div class="result-stat-item glass-panel">
+          <span class="icon text-error">❌</span>
+          <div class="stat-info">
+            <h4 id="res-stat-wrong">0</h4>
+            <p>Incorrect Answers</p>
+          </div>
+        </div>
+        <div class="result-stat-item glass-panel">
+          <span class="icon text-info">⏳</span>
+          <div class="stat-info">
+            <h4 id="res-stat-time">0:00</h4>
+            <p>Time Taken</p>
+          </div>
+        </div>
+        <div class="result-stat-item glass-panel">
+          <span class="icon text-accent">✨</span>
+          <div class="stat-info">
+            <h4 id="res-stat-xp">+0 XP</h4>
+            <p>XP Points Earned</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deep Dive Category Analysis Chart -->
+      <div class="category-analysis-container glass-panel">
+        <h3>Category Performance Analysis</h3>
+        <p class="section-desc">Review which categories need improvement and which are your strengths.</p>
+        
+        <div class="analysis-sections">
+          <div class="chart-wrapper">
+            <div class="custom-svg-bar-chart" id="category-bar-chart">
+              <!-- Render dynamic SVG horizontal bar graphs here -->
+            </div>
+          </div>
+          
+          <div class="strengths-weaknesses">
+            <div class="sw-block strength-block">
+              <h5>🌟 Strong Areas</h5>
+              <ul id="strong-areas-list">
+                <li>Excellent in Computer Science!</li>
+              </ul>
+            </div>
+            <div class="sw-block weakness-block">
+              <h5>⚠️ Review Needed</h5>
+              <ul id="weak-areas-list">
+                <li>Practice more Government & Math.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="results-actions">
+        <button class="btn btn-secondary" id="btn-result-review-wrong">Review Errors</button>
+        <button class="btn btn-primary" id="btn-result-retry">Retry Exam</button>
+        <button class="btn btn-outline" id="btn-result-home">Go Home</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 6. SETTINGS MODAL -->
+  <div class="modal-overlay" id="settings-modal">
+    <div class="modal-box glass-panel">
+      <div class="modal-header">
+        <h2>App Settings</h2>
+        <button class="modal-close" id="close-settings-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Sound Effects -->
+        <div class="settings-row">
+          <div class="settings-info">
+            <strong>Sound Effects</strong>
+            <p>Auditory feedback for clicks, correct, and incorrect answers.</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="settings-sound-toggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- High Contrast Mode -->
+        <div class="settings-row">
+          <div class="settings-info">
+            <strong>High Contrast Accessibility</strong>
+            <p>Increases text contrast for maximum visibility.</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="settings-contrast-toggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- Animations -->
+        <div class="settings-row">
+          <div class="settings-info">
+            <strong>Enable Animations</strong>
+            <p>Toggles UI transitions, sliding menus, and visual confettis.</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="settings-animation-toggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- Font Size Selection -->
+        <div class="settings-row vertical">
+          <div class="settings-info">
+            <strong>Font Scaling</strong>
+            <p>Adjust text size on question cards.</p>
+          </div>
+          <div class="btn-group font-selector">
+            <button class="btn-group-item active" data-font="small">Standard</button>
+            <button class="btn-group-item" data-font="medium">Medium</button>
+            <button class="btn-group-item" data-font="large">Large</button>
+          </div>
+        </div>
+
+        <hr class="modal-divider">
+
+        <!-- Progress Export/Import -->
+        <div class="settings-row vertical">
+          <strong>Data Management</strong>
+          <p>Export your scores, XP, streaks, and bookmarks, or import a backup.</p>
+          <div class="backup-actions">
+            <button class="btn btn-outline btn-small" id="export-progress-btn">📤 Export Backup</button>
+            <button class="btn btn-outline btn-small" id="import-progress-btn">📥 Import Backup</button>
+            <input type="file" id="import-file-input" style="display: none;" accept=".json">
+          </div>
+        </div>
+
+        <hr class="modal-divider">
+
+        <div class="danger-zone">
+          <h4>Danger Zone</h4>
+          <p>This action will clear all statistics, streaks, and custom bookmark questions.</p>
+          <button class="btn btn-danger" id="reset-progress-action">Reset Progress & Clear LocalStorage</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification System -->
+  <div id="toast-container"></div>
+
+  <!-- Load Data Files -->
+  <script src="data/easy.js"></script>
+  <script src="data/medium.js"></script>
+  <script src="data/hard.js"></script>
+  <script src="data/expert.js"></script>
+  <!-- Load Main Logic -->
+  <script src="script.js"></script>
+</body>
+</html>
